@@ -17,27 +17,27 @@ public class UserServiceImpl implements UserService {
     }
 
     public void createUsersTable() {
-        this.dao.createUsersTable();
+        dao.createUsersTable();
     }
 
     public void dropUsersTable() {
-        this.dao.dropUsersTable();
+        dao.dropUsersTable();
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        this.dao.saveUser(name, lastName, age);
+        dao.saveUser(name, lastName, age);
     }
 
     public void removeUserById(long id) {
-        this.dao.removeUserById(id);
+        dao.removeUserById(id);
     }
 
     public List<User> getAllUsers() {
-        return this.dao.getAllUsers();
+        return dao.getAllUsers();
     }
 
     public void cleanUsersTable() {
-        this.dao.cleanUsersTable();
+        dao.cleanUsersTable();
     }
 
 

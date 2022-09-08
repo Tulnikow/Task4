@@ -11,6 +11,13 @@ import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
     private SessionFactory sessionFactory;
+    private static final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS userdb.users "
+            + "(`id` BIGINT NOT NULL AUTO_INCREMENT,"
+            + "`name` VARCHAR(45) NULL,"
+            + "`lastName` VARCHAR(45) NULL,"
+            + "`age` TINYINT NULL," + "PRIMARY KEY (`id`));";
+    private static final String SELECT_ALL = "select a from User a";
+    private static final String TABLE_DROP_SQL = "DROP TABLE IF EXISTS userdb.users";
 
     public UserDaoHibernateImpl() {
         try {
@@ -25,15 +32,10 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS userdb.users "
-                + "(`id` BIGINT NOT NULL AUTO_INCREMENT,"
-                + "`name` VARCHAR(45) NULL,"
-                + "`lastName` VARCHAR(45) NULL,"
-                + "`age` TINYINT NULL," + "PRIMARY KEY (`id`));";
         Transaction tx = null;
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
-            session.createSQLQuery(sql).addEntity(User.class).executeUpdate();
+            session.createSQLQuery(CREATE_TABLE_SQL).addEntity(User.class).executeUpdate();
             tx.commit();
         } catch (Exception e) {
             if (tx != null) tx.rollback();
@@ -47,7 +49,7 @@ public class UserDaoHibernateImpl implements UserDao {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.createSQLQuery("DROP TABLE IF EXISTS userdb.users").executeUpdate();
+            session.createSQLQuery(TABLE_DROP_SQL).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
@@ -87,7 +89,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public List<User> getAllUsers() {
         List<User> listusers;
         try (Session session = sessionFactory.openSession()) {
-            listusers = session.createQuery("select a from User a").getResultList();
+            listusers = session.createQuery(SELECT_ALL).getResultList();
         } catch (Exception e) {
             System.out.println("Получение списка не удалось");
             e.printStackTrace();
